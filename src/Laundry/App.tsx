@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './Laundry/components/MainPage';
-import CalendarPage from './Laundry/components/CalendarPage';
+import MainPage from './components/MainPage';
+import CalendarPage from './components/CalendarPage';
 
 export default function App() {
     return (
