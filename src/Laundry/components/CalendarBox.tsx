@@ -39,29 +39,21 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     };
 
     //Used by the BookingPopout component
+    const toggleBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void) => {
+        setIsBooked(!isBooked);
+    };
+
     const handleSave = () => {
         if (bookingSlot !== null) {
             switch (bookingSlot) {
                 case 1:
-                    if (isBooked1) {
-                        setIsBooked1(false);
-                    } else {
-                        setIsBooked1(true);
-                    }
+                    toggleBooking(isBooked1, setIsBooked1);
                     break;
                 case 2:
-                    if (isBooked2) {
-                        setIsBooked2(false);
-                    } else {
-                        setIsBooked2(true);
-                    }
+                    toggleBooking(isBooked2, setIsBooked2);
                     break;
                 case 3:
-                    if (isBooked3) {
-                        setIsBooked3(false);
-                    } else {
-                        setIsBooked3(true);
-                    }
+                    toggleBooking(isBooked3, setIsBooked3);
                     break;
                 default:
                     break;
