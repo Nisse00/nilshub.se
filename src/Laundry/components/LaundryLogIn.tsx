@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function LaundryLogIn() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log(username + " " + password);
+        navigate('/Laundry');
     }
 
     return (
