@@ -96,7 +96,6 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
                             onClick={() => handleClick(1, "08:00-12:00")}
                             style={{ padding: "0.5rem" }}
                         >
-                            {/* No text needed */}
                         </button>
                     </li>
                     <li style={{ marginLeft: "-1.25rem", marginBottom: "0.5rem", fontSize: "12px", display: "flex", justifyContent: "space-between" }}>
@@ -106,7 +105,6 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
                             onClick={() => handleClick(2, "12:00-16:00")}
                             style={{ padding: "0.5rem" }}
                         >
-                            {/* No text needed */}
                         </button>
                     </li>
                     <li style={{ marginLeft: "-1.25rem", marginBottom: "0.5rem", fontSize: "12px", display: "flex", justifyContent: "space-between" }}>
@@ -116,7 +114,6 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
                             onClick={() => handleClick(3, "16:00-20:00")}
                             style={{ padding: "0.5rem" }}
                         >
-                            {/* No text needed */}
                         </button>
                     </li>
                 </ul>
