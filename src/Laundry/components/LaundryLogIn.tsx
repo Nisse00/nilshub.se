@@ -7,10 +7,26 @@ export default function LaundryLogIn() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    function handleSubmit(event : React.FormEvent<HTMLFormElement>) {
+    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        navigate('/Laundry');
+        
+        fetch("http://localhost:5001/api/laundry/login/createAccount", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+        })
+        .then(response => {
+            if (response.ok) {
+                navigate('/Laundry');
+            } else {
+                alert("Failed to add user.");
+            }
+        })
+        .catch(error => console.error("Error:", error));
     }
+    
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
