@@ -11,7 +11,7 @@ CORS(app)
 def get_users():
     return "Hello, this is the Laundry API!"
 
-@app.route('/api/laundry/login/signIn', methods=['GET'])
+@app.route('/api/laundry/login', methods=['POST'])
 def get_user():
     data = request.get_json()
     username = data.get('username')
@@ -44,9 +44,6 @@ def add_user():
     # Connect to the database and insert user data
     conn = sqlite3.connect("src/Laundry/db/laundry_database.db")
     cursor = conn.cursor()
-    print("Opened database successfully")
-    print("Username:", data.get('username'))
-    print("Password:", data.get('password'))
     
     # You might want to add error handling here for user creation
     try:
