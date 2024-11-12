@@ -6,11 +6,7 @@ function MainPageLaundry() {
     const goToCalendar = () => {
         navigate('calendar/');
     };
-
-    const goToLogin = () => {
-        navigate('login/');
-    };
-
+    
     const goToNilshub = () => {
         navigate('/');
     };
@@ -23,9 +19,6 @@ function MainPageLaundry() {
             </button>
             <button onClick={goToCalendar} style={{ padding: '10px 20px', fontSize: '16px' }}>
                 Go to Calendar
-            </button>
-            <button onClick={goToLogin} style={{ padding: '10px 20px', fontSize: '16px' }}>
-                Log in
             </button>
         </div>
     );

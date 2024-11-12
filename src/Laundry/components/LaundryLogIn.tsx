@@ -43,7 +43,6 @@ export default function LaundryLogIn() {
                         <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Login</button>
-                    <button className="btn btn-secondary w-100" onClick={() => navigate('./CreateAccount')}>Create account</button>
                 </form>
             </div>
         </div>
