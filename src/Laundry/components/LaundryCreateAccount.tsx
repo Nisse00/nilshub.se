@@ -18,7 +18,7 @@ export default function LaundryCreateAccount() {
         })
         .then(response => {
             if (response.ok) {
-                navigate('/Laundry');
+                navigate('/Laundry/calendar');
             } else {
                 alert("Failed to add user.");
             }

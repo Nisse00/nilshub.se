@@ -14,12 +14,14 @@ export default function LaundryLogIn() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+
             },
             body: JSON.stringify({ username, password }),
+            credentials: "include",
         })
         .then(response => {
             if (response.ok) {
-                navigate('/Laundry');
+                navigate('/Laundry/calendar');
             } else {
                 alert("Failed to log in.");
             }
