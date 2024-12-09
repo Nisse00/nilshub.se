@@ -31,7 +31,6 @@ export default function LaundryLogIn() {
     
 
     return (
-        <>
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="w-50">
                 <h1 className="text-center">Log in</h1>
@@ -48,6 +47,5 @@ export default function LaundryLogIn() {
                 </form>
             </div>
         </div>
-        </>
     );
 }

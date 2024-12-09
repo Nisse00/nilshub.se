@@ -9,8 +9,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 app.config["SECRET_KEY"] = 'secret_dev_key'
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
-app.config["SESSION_TYPE"] = "sqlalchemy"
-app.config["SESSION_COOKIE_SANME_SITE"] = "None"  
+app.config["SESSION_TYPE"] = "sqlalchemy" 
 
 db = SQLAlchemy(app)
 

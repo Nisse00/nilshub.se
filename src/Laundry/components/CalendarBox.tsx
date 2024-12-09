@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SavingBookingPopout from "./SavingBookingPopout";
 import CancellingBookingPopout from "./CancellingBookingPopout";
 
@@ -14,6 +14,25 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     const [showCancelBookingPopout, setShowCancelBookingPopout] = useState(false);
     const [bookingText, setBookingText] = useState("");
     const [bookingSlot, setBookingSlot] = useState<number | null>(null);
+    
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Used to check if the user is logged in, can only book when logged in
+
+
+    useEffect(() => {
+        fetch('http://localhost:5001/api/laundry/user', {
+            method: 'GET',
+            credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'User is logged in') {
+                setIsLoggedIn(true); 
+            } else {
+                setIsLoggedIn(false); 
+            }
+        })
+        .catch(error => console.error('Error fetching user info:', error));
+    }, []); 
 
     const handleConfirmation = (isBooked: boolean, text: string, slot: number): boolean => {
         setBookingText(text); // Set the booking text
@@ -27,6 +46,11 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     };
 
     const handleClick = (arg: number, text: string): void => {
+        if (!isLoggedIn) {
+            alert("You must be logged in to book a time slot.");
+            return;
+        }
+
         if (arg === 1) {
             isBooked1 ? handleConfirmation(true, text, arg) : handleConfirmation(false, text, arg);
         }
