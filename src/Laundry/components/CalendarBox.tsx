@@ -3,7 +3,7 @@ import SavingBookingPopout from "./SavingBookingPopout";
 import CancellingBookingPopout from "./CancellingBookingPopout";
 
 interface CalendarBoxProps {
-    readonly cardTitleNumber: number;
+     cardTitleNumber: number;
 }
 
 export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
@@ -15,7 +15,7 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     const [bookingText, setBookingText] = useState("");
     const [bookingSlot, setBookingSlot] = useState<number | null>(null);
     
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Used to check if the user is logged in, can only book when logged in
+    const [username, setUsername] = useState("");
 
 
     useEffect(() => {
@@ -26,9 +26,9 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
         .then(response => response.json())
         .then(data => {
             if (data.message === 'User is logged in') {
-                setIsLoggedIn(true); 
+                setUsername(data.user_info);
             } else {
-                setIsLoggedIn(false); 
+                setUsername("");
             }
         })
         .catch(error => console.error('Error fetching user info:', error));
@@ -46,7 +46,7 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     };
 
     const handleClick = (arg: number, text: string): void => {
-        if (!isLoggedIn) {
+        if (!username) {
             alert("You must be logged in to book a time slot.");
             return;
         }
@@ -64,7 +64,17 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
 
     //Used by the BookingPopout component
     const toggleBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void) => {
-        setIsBooked(!isBooked);
+        const calendarBoxId = Number(String(cardTitleNumber) + String(bookingSlot));
+
+        fetch("http://localhost:5001/api/laundry/addBooking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({username: username, calendarBoxId: calendarBoxId, isBooked: !isBooked }),
+            credentials: "include",
+        }).then(() => {setIsBooked(!isBooked);})
+        .catch(error => console.error("Error:", error));
     };
 
     const handleSave = () => {

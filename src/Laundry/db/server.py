@@ -78,5 +78,29 @@ def logout():
     print("Session after logout:", session)
     return jsonify({"message": "User logged out"}), 200
 
+@app.route("/api/laundry/addBooking", methods=['POST'])
+def addBooking():
+    data = request.get_json()
+    print("Data:", data)
+    username = data.get('username', {}).get('name')
+    calendarBoxId = data.get('calendarBoxId')
+    print("Username:", username, "CalendarBoxId:", calendarBoxId)
+
+    conn = sqlite3.connect("laundry_database.db")
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("UPDATE laundry_users SET booking = ? WHERE name = ?", (calendarBoxId, username))
+        conn.commit()
+        message = "Booking added successfully"
+        status_code = 200
+    except sqlite3.Error as e:
+        print("Error:", e)
+        message = str(e)
+        status_code = 400
+
+    conn.close()
+    return jsonify({"message": message}), status_code
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5001)
