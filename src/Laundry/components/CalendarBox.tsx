@@ -17,6 +17,8 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     
     const [username, setUsername] = useState("");
 
+    const date = new Date();
+    const currentDate = date.getDate() + "-" + (date.getMonth()+1) + "-" + date.getFullYear();
 
     useEffect(() => {
         fetch('http://localhost:5001/api/laundry/user', {
@@ -63,15 +65,14 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
     };
 
     //Used by the BookingPopout component
-    const toggleBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void) => {
-        const calendarBoxId = Number(String(cardTitleNumber) + String(bookingSlot));
+    const toggleBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void, time: number) => {
 
         fetch("http://localhost:5001/api/laundry/addBooking", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({username: username, calendarBoxId: calendarBoxId, isBooked: !isBooked }),
+            body: JSON.stringify({username: username, date: currentDate, time: time, isBooked: !isBooked }),
             credentials: "include",
         }).then(() => {setIsBooked(!isBooked);})
         .catch(error => console.error("Error:", error));
@@ -81,13 +82,13 @@ export default function CalendarBox({ cardTitleNumber }: CalendarBoxProps) {
         if (bookingSlot !== null) {
             switch (bookingSlot) {
                 case 1:
-                    toggleBooking(isBooked1, setIsBooked1);
+                    toggleBooking(isBooked1, setIsBooked1, 1);
                     break;
                 case 2:
-                    toggleBooking(isBooked2, setIsBooked2);
+                    toggleBooking(isBooked2, setIsBooked2, 2);
                     break;
                 case 3:
-                    toggleBooking(isBooked3, setIsBooked3);
+                    toggleBooking(isBooked3, setIsBooked3, 3);
                     break;
                 default:
                     break;

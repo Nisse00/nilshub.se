@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Calendar() {
     const currentDate = new Date();
+    const currentMonthStr = currentDate.toLocaleString('default', { month: 'long' }).charAt(0).toUpperCase() + currentDate.toLocaleString('default', { month: 'long' }).slice(1);
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
 
     const calendarBoxes = Array.from({ length: daysInMonth }, (_, index) => (
@@ -31,6 +32,7 @@ export default function Calendar() {
                 </div>
                 <div className="col text-center">
                     <h1>Calendar Booking</h1>
+                    <h3>{currentMonthStr}</h3>
                 </div>
             </div>
             {rows}

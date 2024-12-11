@@ -25,7 +25,7 @@ def get_user():
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM laundry_users WHERE name = ? AND password = ?", (username, password))
+    cursor.execute("SELECT * FROM laundry_users WHERE username = ? AND password = ?", (username, password))
     user = cursor.fetchone()
     conn.close()
 
@@ -49,7 +49,7 @@ def add_user():
     cursor = conn.cursor()
     
     try:
-        cursor.execute("INSERT INTO laundry_users (name, password) VALUES (?, ?)", (username, password))
+        cursor.execute("INSERT INTO laundry_users (username, password) VALUES (?, ?)", (username, password))
         conn.commit()
         message = "User added successfully"
         status_code = 200
@@ -83,14 +83,15 @@ def addBooking():
     data = request.get_json()
     print("Data:", data)
     username = data.get('username', {}).get('name')
-    calendarBoxId = data.get('calendarBoxId')
-    print("Username:", username, "CalendarBoxId:", calendarBoxId)
+    date = data.get('date')
+    time = data.get('time')
+    print("Username:", username, "Date:", date, "Time:", time)
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
     
     try:
-        cursor.execute("UPDATE laundry_users SET booking = ? WHERE name = ?", (calendarBoxId, username))
+        cursor.execute("INSERT INTO bookings (username, booking_date, booking_time) VALUES (?, ?, ?)", (username, date, time))
         conn.commit()
         message = "Booking added successfully"
         status_code = 200
