@@ -103,5 +103,17 @@ def addBooking():
     conn.close()
     return jsonify({"message": message}), status_code
 
+@app.route("/api/laundry/getBookings", methods=['GET'])
+def getBookings():
+    conn = sqlite3.connect("laundry_database.db")
+    cursor = conn.cursor()
+    ##I only want the columns booking_date and booking_time
+    cursor.execute("SELECT booking_date, booking_time FROM bookings")
+    bookings = cursor.fetchall()
+    conn.close()
+    print("Bookings:", bookings) ## Bookings: [('11-12-2024', '1'), ('11-12-2024', '1')]
+
+    return jsonify({"bookings": bookings})
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5001)

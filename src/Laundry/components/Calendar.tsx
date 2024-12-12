@@ -1,13 +1,40 @@
 import CalendarBox from "./CalendarBox";
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 
 export default function Calendar() {
     const currentDate = new Date();
-    const currentMonthStr = currentDate.toLocaleString('default', { month: 'long' }).charAt(0).toUpperCase() + currentDate.toLocaleString('default', { month: 'long' }).slice(1);
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    const [bookings, setBookings] = useState(Array.from({ length: daysInMonth }, () => [false, false, false]));
+
+    useEffect(() => {
+        fetch('http://localhost:5001/api/laundry/getBookings', {
+            method: 'GET',
+            credentials: 'include',
+        })
+        .then(response => response.json())
+        .then(data => {
+            const updatedBookings = Array.from({ length: 31 }, () => [false, false, false]); // Reset bookings array
+
+            data.bookings.forEach(([date, timeSlot]: [string, string]) => {
+                const [day, month, year] = date.split('-').map(Number);
+                const bookingDay = day - 1; // Convert to zero-based index
+                const slotIndex = parseInt(timeSlot) - 1; // Convert time slot to zero-based index
+                
+                if (updatedBookings[bookingDay] && slotIndex >= 0 && slotIndex < 3) {
+                    updatedBookings[bookingDay][slotIndex] = true; // Mark the slot as booked
+                }
+            });
+
+            setBookings(updatedBookings); // Update state with new bookings
+        })
+        .catch(error => console.error('Error fetching bookings:', error));
+    }, []);
+
+    const currentMonthStr = currentDate.toLocaleString('default', { month: 'long' }).charAt(0).toUpperCase() + currentDate.toLocaleString('default', { month: 'long' }).slice(1);
 
     const calendarBoxes = Array.from({ length: daysInMonth }, (_, index) => (
-        <CalendarBox key={index} cardTitleNumber={index + 1} />
+        <CalendarBox key={index} cardTitleNumber={index + 1} bookings={bookings[index] as [boolean, boolean, boolean]} />
     ));
 
     const navigate = useNavigate();
