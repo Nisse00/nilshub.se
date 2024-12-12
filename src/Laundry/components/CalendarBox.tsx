@@ -42,8 +42,10 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
             .catch((error) => console.error("Error fetching user info:", error));
     }, [bookings]);
 
+    //This is all for the modal popout
     const handleConfirmation = (isBooked: boolean, text: string, slot: number): boolean => {
         setBookingText(text);
+        // Set the booking slot to be saved/cancelled (1, 2, or 3) with the corresponding values 8:00-12:00, 12:00-16:00, 16:00-20:00
         setBookingSlot(slot);
         if (isBooked) {
             setShowCancelBookingPopout(true);
@@ -74,15 +76,34 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
             .catch((error) => console.error("Error:", error));
     };
 
+    const toggleCancelBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void, time: number) => {
+        fetch("http://localhost:5001/api/laundry/deleteBooking", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, date: bookingDate, time }),
+            credentials: "include",
+        })
+            .then(() => setIsBooked(!isBooked))
+            .catch((error) => console.error("Error:", error));
+    }
+
+    //This is called by the modal popout
     const handleSave = () => {
+        const setBookedStates = [setIsBooked1, setIsBooked2, setIsBooked3];
         if (bookingSlot !== null) {
-            const setBookedStates = [setIsBooked1, setIsBooked2, setIsBooked3];
-            toggleBooking([isBooked1, isBooked2, isBooked3][bookingSlot - 1], setBookedStates[bookingSlot - 1], bookingSlot);
+            const theBookingSlot = isBooked1 ? 1 : isBooked2 ? 2 : isBooked3 ? 3 : null;
+            //If the booking slot is already booked, we neeed to cancel it
+            if (theBookingSlot) {
+                toggleCancelBooking([isBooked1, isBooked2, isBooked3][theBookingSlot - 1], setBookedStates[theBookingSlot - 1], theBookingSlot);
+            } else {
+                toggleBooking([isBooked1, isBooked2, isBooked3][bookingSlot - 1], setBookedStates[bookingSlot - 1], bookingSlot);
+            }
         }
         setShowSavingBookingPopout(false);
         setShowCancelBookingPopout(false);
     };
 
+    //Both these functions are called by the modal popout
     const handleCloseSave = () => setShowSavingBookingPopout(false);
     const handleCloseCancel = () => setShowCancelBookingPopout(false);
 

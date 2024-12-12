@@ -103,6 +103,31 @@ def addBooking():
     conn.close()
     return jsonify({"message": message}), status_code
 
+@app.route("/api/laundry/deleteBooking", methods=['POST'])
+def deleteBooking():
+    data = request.get_json()
+    print("Data:", data)
+    username = data.get('username', {}).get('name')
+    date = data.get('date')
+    time = data.get('time')
+    print("Username:", username, "Date:", date, "Time:", time)
+
+    conn = sqlite3.connect("laundry_database.db")
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute("DELETE FROM bookings WHERE username = ? AND booking_date = ? AND booking_time = ?", (username, date, time))
+        conn.commit()
+        message = "Booking deleted successfully"
+        status_code = 200
+    except sqlite3.Error as e:
+        print("Error:", e)
+        message = str(e)
+        status_code = 400
+
+    conn.close()
+    return jsonify({"message": message}), status_code
+
 @app.route("/api/laundry/getBookings", methods=['GET'])
 def getBookings():
     conn = sqlite3.connect("laundry_database.db")
