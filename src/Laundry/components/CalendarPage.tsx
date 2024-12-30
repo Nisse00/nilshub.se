@@ -7,8 +7,10 @@ interface User {
 }
 
 function CalendarPage() {
+
     const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
+
 
     useEffect(() => {
         fetch('http://localhost:5001/api/laundry/user', {
@@ -55,7 +57,7 @@ function CalendarPage() {
                     <button onClick={() => navigate('/Laundry/login')} style={{ padding: '10px 20px', fontSize: '16px' }}> Log in </button>
                     <button onClick={logOut} style={{ padding: '10px 20px', fontSize: '16px' }}>Log out</button>
                     <button onClick={() => navigate('/Laundry/login/createAccount')} style={{ padding: '10px 20px', fontSize: '16px' }}>Create account</button>
-                    <Calendar />
+                    <Calendar username={user ? user.name : null} />
                 </div>
             </div>
         </div>

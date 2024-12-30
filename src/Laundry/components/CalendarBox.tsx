@@ -5,9 +5,11 @@ import CancellingBookingPopout from "./CancellingBookingPopout";
 interface CalendarBoxProps {
     cardTitleNumber: number;
     bookings: [boolean, boolean, boolean];
+    userAlreadyBooked: boolean;
+    forceRerenderCalendar: () => void;
 }
 
-export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxProps) {
+export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar }: CalendarBoxProps) {
     const [isBooked1, setIsBooked1] = useState(bookings[0]);
     const [isBooked2, setIsBooked2] = useState(bookings[1]);
     const [isBooked3, setIsBooked3] = useState(bookings[2]);
@@ -18,14 +20,17 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
     const [username, setUsername] = useState("");
 
     const date = new Date();
-    const bookingDate = `${cardTitleNumber}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    const bookingDate = `${date.getFullYear()}-${date.getMonth() + 1}-${cardTitleNumber}`;
+    const bookingDateNbr = Number(`${date.getFullYear()}${date.getMonth() + 1}${cardTitleNumber}`);
+    const currentDateNbr = Number(`${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`);
 
     useEffect(() => {
-        // Update isBooked states when bookings props change
         setIsBooked1(bookings[0]);
         setIsBooked2(bookings[1]);
         setIsBooked3(bookings[2]);
+    }, [bookings]);
 
+    useEffect(() => {
         // Fetch logged-in user details
         fetch("http://localhost:5001/api/laundry/user", {
             method: "GET",
@@ -40,7 +45,7 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
                 }
             })
             .catch((error) => console.error("Error fetching user info:", error));
-    }, [bookings]);
+    }, []);
 
     //This is all for the modal popout
     const handleConfirmation = (isBooked: boolean, text: string, slot: number): boolean => {
@@ -55,11 +60,22 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
         return true;
     };
 
-    const handleClick = (arg: number, text: string): void => {
+    const handleClick = (arg: number, text: string, bookingButton: boolean): void => {
         if (!username) {
             alert("You must be logged in to book a time slot.");
             return;
         }
+
+        if (bookingDateNbr < currentDateNbr) {
+            alert("You cannot book/cancel a time slot for a date in the past.");
+            return;
+        }
+
+        if (userAlreadyBooked && !bookingButton) {
+            alert("You have already booked a time slot and cannot book another one.");
+            return;
+        }
+        
         if (arg === 1) handleConfirmation(isBooked1, text, arg);
         if (arg === 2) handleConfirmation(isBooked2, text, arg);
         if (arg === 3) handleConfirmation(isBooked3, text, arg);
@@ -99,6 +115,8 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
                 toggleBooking([isBooked1, isBooked2, isBooked3][bookingSlot - 1], setBookedStates[bookingSlot - 1], bookingSlot);
             }
         }
+        //We need to call a function to update the state of the bookings
+        forceRerenderCalendar();
         setShowSavingBookingPopout(false);
         setShowCancelBookingPopout(false);
     };
@@ -126,7 +144,7 @@ export default function CalendarBox({ cardTitleNumber, bookings }: CalendarBoxPr
                             <span>{time}</span>
                             <button
                                 className={`btn ${[isBooked1, isBooked2, isBooked3][idx] ? "btn-danger" : "btn-success"}`}
-                                onClick={() => handleClick(idx + 1, time)}
+                                onClick={() => handleClick(idx + 1, time, [isBooked1, isBooked2, isBooked3][idx])}
                                 style={{ padding: "0.5rem" }}
                             />
                         </li>

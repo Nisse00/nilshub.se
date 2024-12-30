@@ -2,13 +2,13 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 interface CancellingBookingPopoutProps {
-  readonly show: boolean;
-  readonly handleCloseCancel: () => void;
-  readonly handleSave: () => void;
-  readonly text: string;
+show: boolean;
+handleCloseCancel: () => void;
+handleSave: () => void;
+text: string;
 }
 
-function CancellingBookingPopout({ show, handleCloseCancel, handleSave, text }: Readonly<CancellingBookingPopoutProps>) {
+function CancellingBookingPopout({ show, handleCloseCancel, handleSave, text }:Readonly <CancellingBookingPopoutProps>) {
   return (
     <Modal show={show} onHide={handleCloseCancel}>
       <Modal.Header closeButton>

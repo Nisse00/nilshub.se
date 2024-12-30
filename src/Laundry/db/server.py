@@ -30,9 +30,7 @@ def get_user():
     conn.close()
 
     if user:
-        print("User found, you are now logged in with username:", username)
         session['username'] = username
-        print("Session after login:", session)
         message = make_response("User found, you are now logged in", 200)
     else:
         message = make_response("User not found, please try again", 404)
@@ -63,29 +61,22 @@ def add_user():
 
 @app.route('/api/laundry/user', methods=['GET'])
 def get_logged_in_user():
-    print("Session:", session)
-    print("Session username:", session.get('username'))
     if 'username' in session:
-        print("User is logged in we are here")
         return jsonify({"message": "User is logged in", "user_info": {"name": session['username']}})
     else:
-        print("The user is not logged in")
         return jsonify({"message": "No user logged in"}), 401
     
 @app.route('/api/laundry/logout', methods=['POST'])
 def logout():
     session.pop('username', None)
-    print("Session after logout:", session)
     return jsonify({"message": "User logged out"}), 200
 
 @app.route("/api/laundry/addBooking", methods=['POST'])
 def addBooking():
     data = request.get_json()
-    print("Data:", data)
     username = data.get('username', {}).get('name')
     date = data.get('date')
     time = data.get('time')
-    print("Username:", username, "Date:", date, "Time:", time)
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
@@ -106,11 +97,9 @@ def addBooking():
 @app.route("/api/laundry/deleteBooking", methods=['POST'])
 def deleteBooking():
     data = request.get_json()
-    print("Data:", data)
     username = data.get('username', {}).get('name')
     date = data.get('date')
     time = data.get('time')
-    print("Username:", username, "Date:", date, "Time:", time)
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
@@ -132,13 +121,34 @@ def deleteBooking():
 def getBookings():
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
-    ##I only want the columns booking_date and booking_time
     cursor.execute("SELECT booking_date, booking_time FROM bookings")
     bookings = cursor.fetchall()
     conn.close()
-    print("Bookings:", bookings) ## Bookings: [('11-12-2024', '1'), ('11-12-2024', '1')]
 
     return jsonify({"bookings": bookings})
+
+@app.route("/api/laundry/checkBookingForUser", methods=['POST'])
+def checkBookingForUser():
+    data = request.get_json()
+    print("THIS IS THE DATA: ", data)
+    username = data.get('username')
+    date = data.get('dateToSend')
+    print("CHECKING BOOKING FOR USER:", username, "DATE:", date)
+
+    conn = sqlite3.connect("laundry_database.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT booking_date FROM bookings WHERE username = ? AND booking_date >= ?", (username, date))
+    print("CHECK OF THE DATES:", "2024-12-30" >= "2024-12-30")
+    bookings = cursor.fetchall()
+    conn.close()
+    print("Bookings for user:", bookings)
+
+    if bookings:
+        message = "User has a booking"
+        return jsonify({"message": message})
+    else:
+        message = "User has no booking"
+        return jsonify({"message": message})
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5001)
