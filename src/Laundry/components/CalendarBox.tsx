@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import SavingBookingPopout from "./SavingBookingPopout";
-import CancellingBookingPopout from "./CancellingBookingPopout";
+import BookingPopout from "./SavingBookingPopout";
 
 interface CalendarBoxProps {
     cardTitleNumber: number;
@@ -151,8 +150,8 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
                     ))}
                 </ul>
             </div>
-            <SavingBookingPopout show={showSavingBookingPopout} handleCloseSave={handleCloseSave} handleSave={handleSave} text={bookingText} />
-            <CancellingBookingPopout show={showCancelBookingPopout} handleCloseCancel={handleCloseCancel} handleSave={handleSave} text={bookingText} />
+            <BookingPopout show={showSavingBookingPopout} handleCloseSave={handleCloseSave} handleCloseCancel={handleCloseCancel} handleSave={handleSave} text={bookingText} option={"Book"} />
+            <BookingPopout show={showCancelBookingPopout} handleCloseSave={handleCloseSave} handleCloseCancel={handleCloseCancel} handleSave={handleSave} text={bookingText} option={"Cancel"} />
         </div>
     );
 }

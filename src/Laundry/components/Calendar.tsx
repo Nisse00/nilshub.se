@@ -56,7 +56,6 @@ export default function Calendar({ username }: CalendarProps) {
             .then((response) => response.json())
             .then((data) => {
                 setUserAlreadyBooked(data.message === "User has a booking");
-                console.log("The user: " + username + " The data: " + data.message);
             })
             .catch((error) => console.error("Error:", error));
     };
