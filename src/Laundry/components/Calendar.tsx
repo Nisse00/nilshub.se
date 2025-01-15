@@ -8,16 +8,21 @@ interface CalendarProps {
 
 export default function Calendar({ username }: CalendarProps) {
     const currentDate = new Date();
+    const [displayedMonth, setDisplayedMonth] = useState(currentDate.getMonth());
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const [bookings, setBookings] = useState(Array.from({ length: daysInMonth }, () => [false, false, false]));
     const [userAlreadyBooked, setUserAlreadyBooked] = useState(false);
     const [reRender, setReRender] = useState(0); // Trigger for re-fetching bookings
 
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
     // Re-fetch bookings and user status when reRender changes
     useEffect(() => {
         fetchBookings();
         fetchUserBookingStatus();
-    }, [reRender, username]);
+    }, [reRender, username, displayedMonth]);
 
     // Fetch bookings from the backend
     const fetchBookings = () => {
@@ -31,6 +36,9 @@ export default function Calendar({ username }: CalendarProps) {
 
                 data.bookings.forEach(([date, timeSlot]: [string, string]) => {
                     const [year, month, day] = date.split("-").map(Number);
+                    if (month - 1 !== displayedMonth) { // Only update bookings for the displayed month
+                        return;
+                    }
                     const bookingDay = day - 1; // Convert to zero-based index
                     const slotIndex = parseInt(timeSlot) - 1; // Convert time slot to zero-based index
 
@@ -64,13 +72,6 @@ export default function Calendar({ username }: CalendarProps) {
         setReRender((prev) => prev + 1); // Increment reRender to trigger useEffect
     };
 
-    const currentMonthStr =
-        currentDate
-            .toLocaleString("default", { month: "long" })
-            .charAt(0)
-            .toUpperCase() +
-        currentDate.toLocaleString("default", { month: "long" }).slice(1);
-
     const calendarBoxes = Array.from({ length: daysInMonth }, (_, index) => (
         <CalendarBox
             key={index}
@@ -78,6 +79,7 @@ export default function Calendar({ username }: CalendarProps) {
             userAlreadyBooked={userAlreadyBooked}
             cardTitleNumber={index + 1}
             bookings={bookings[index] as [boolean, boolean, boolean]}
+            expired = {index < currentDate.getDate() - 1 && displayedMonth === currentDate.getMonth()}
         />
     ));
 
@@ -113,7 +115,16 @@ export default function Calendar({ username }: CalendarProps) {
                 </div>
                 <div className="col text-center">
                     <h1>Calendar Booking</h1>
-                    <h3>{currentMonthStr}</h3>
+                    <h3>{monthNames[displayedMonth]}</h3>
+                </div>
+                <div className="col-auto">
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => setDisplayedMonth((prev) => (prev === currentDate.getMonth() ? prev + 1 : prev - 1))}
+                        style={{ marginLeft: "10px" }}
+                    >
+                        {displayedMonth === currentDate.getMonth() ? "Next Month" : "Back to current month"}
+                    </button>
                 </div>
             </div>
             {rows}

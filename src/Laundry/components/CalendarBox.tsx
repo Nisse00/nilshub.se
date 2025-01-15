@@ -6,9 +6,10 @@ interface CalendarBoxProps {
     bookings: [boolean, boolean, boolean];
     userAlreadyBooked: boolean;
     forceRerenderCalendar: () => void;
+    expired: boolean;
 }
 
-export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar }: CalendarBoxProps) {
+export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired }: CalendarBoxProps) {
     const [isBooked1, setIsBooked1] = useState(bookings[0]);
     const [isBooked2, setIsBooked2] = useState(bookings[1]);
     const [isBooked3, setIsBooked3] = useState(bookings[2]);
@@ -142,9 +143,10 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
                         >
                             <span>{time}</span>
                             <button
-                                className={`btn ${[isBooked1, isBooked2, isBooked3][idx] ? "btn-danger" : "btn-success"}`}
+                                className={`btn ${expired ? "btn-secondary" : [isBooked1, isBooked2, isBooked3][idx] ? "btn-danger" : "btn-success"}`}
                                 onClick={() => handleClick(idx + 1, time, [isBooked1, isBooked2, isBooked3][idx])}
                                 style={{ padding: "0.5rem" }}
+                                disabled={expired}
                             />
                         </li>
                     ))}
