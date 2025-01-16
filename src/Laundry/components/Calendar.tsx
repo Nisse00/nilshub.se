@@ -12,11 +12,11 @@ export default function Calendar({ username }: CalendarProps) {
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const [bookings, setBookings] = useState(Array.from({ length: daysInMonth }, () => [false, false, false]));
     const [userAlreadyBooked, setUserAlreadyBooked] = useState(false);
+    const [userBookingDate, setUserBookingDate] = useState("");
+    const [userBookingSlot, setUserBookingSlot] = useState(-1);
     const [reRender, setReRender] = useState(0); // Trigger for re-fetching bookings
 
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-      ];
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     // Re-fetch bookings and user status when reRender changes
     useEffect(() => {
@@ -64,6 +64,8 @@ export default function Calendar({ username }: CalendarProps) {
             .then((response) => response.json())
             .then((data) => {
                 setUserAlreadyBooked(data.message === "User has a booking");
+                setUserBookingDate(data.booking_date);
+                setUserBookingSlot(data.booking_slot);
             })
             .catch((error) => console.error("Error:", error));
     };
@@ -76,7 +78,7 @@ export default function Calendar({ username }: CalendarProps) {
         <CalendarBox
             key={index}
             forceRerenderCalendar={forceRerenderCalendar}
-            userAlreadyBooked={userAlreadyBooked}
+            userAlreadyBooked={[userAlreadyBooked, userBookingDate, userBookingSlot]}
             cardTitleNumber={index + 1}
             bookings={bookings[index] as [boolean, boolean, boolean]}
             expired = {index < currentDate.getDate() - 1 && displayedMonth === currentDate.getMonth()}

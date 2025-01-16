@@ -137,15 +137,15 @@ def checkBookingForUser():
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
-    cursor.execute("SELECT booking_date FROM bookings WHERE username = ? AND booking_date >= ?", (username, date))
+    cursor.execute("SELECT * FROM bookings WHERE username = ? AND booking_date >= ?", (username, date))
     print("CHECK OF THE DATES:", "2024-12-30" >= "2024-12-30")
-    bookings = cursor.fetchall()
+    booking = cursor.fetchall()
     conn.close()
-    print("Bookings for user:", bookings)
+    print("Booking for user:", booking)
 
-    if bookings:
+    if booking:
         message = "User has a booking"
-        return jsonify({"message": message})
+        return jsonify({"message": message, "booking_date": booking[0][2], "booking_slot": booking[0][3]})
     else:
         message = "User has no booking"
         return jsonify({"message": message})

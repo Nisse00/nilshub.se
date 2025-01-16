@@ -4,7 +4,7 @@ import BookingPopout from "./SavingBookingPopout";
 interface CalendarBoxProps {
     cardTitleNumber: number;
     bookings: [boolean, boolean, boolean];
-    userAlreadyBooked: boolean;
+    userAlreadyBooked: [boolean, string, number];
     forceRerenderCalendar: () => void;
     expired: boolean;
 }
@@ -71,7 +71,7 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
             return;
         }
 
-        if (userAlreadyBooked && !bookingButton) {
+        if (userAlreadyBooked[0] && !bookingButton) {
             alert("You have already booked a time slot and cannot book another one.");
             return;
         }
@@ -125,6 +125,18 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
     const handleCloseSave = () => setShowSavingBookingPopout(false);
     const handleCloseCancel = () => setShowCancelBookingPopout(false);
 
+    //This function checks if the user has already booked a slot for the current day in the correct slot
+    const checkIfUserHasBookedThisSlot = (idx: number): boolean => {
+        if(userAlreadyBooked[0]) {
+            if(Number(userAlreadyBooked[1].split("-")[2]) === cardTitleNumber) {
+                if(userAlreadyBooked[2] == idx) {
+                return true;
+                }
+            }
+        }
+        return false;
+    }
+
     return (
         <div className="card" style={{ width: "10rem", height: "8rem" }}>
             <div className="card-body">
@@ -143,7 +155,15 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
                         >
                             <span>{time}</span>
                             <button
-                                className={`btn ${expired ? "btn-secondary" : [isBooked1, isBooked2, isBooked3][idx] ? "btn-danger" : "btn-success"}`}
+                                className={`btn ${
+                                    expired
+                                        ? "btn-secondary"
+                                        : (checkIfUserHasBookedThisSlot(idx+1))
+                                        ? "btn-primary"
+                                        : [isBooked1, isBooked2, isBooked3][idx]
+                                        ? "btn-danger"
+                                        : "btn-success"
+                                }`}
                                 onClick={() => handleClick(idx + 1, time, [isBooked1, isBooked2, isBooked3][idx])}
                                 style={{ padding: "0.5rem" }}
                                 disabled={expired}
