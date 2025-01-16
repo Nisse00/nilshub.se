@@ -37,11 +37,11 @@ export default function LaundryLogIn() {
                 <form noValidate onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                        <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value.trim())}/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                        <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value.trim())}/>
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Login</button>
                 </form>

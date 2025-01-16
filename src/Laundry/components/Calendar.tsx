@@ -118,7 +118,13 @@ export default function Calendar({ username }: CalendarProps) {
                 </div>
                 <div className="col text-center">
                     <h1>Calendar Booking</h1>
-                    <h3>{monthNames[displayedMonth]}</h3>
+                    <h3>{monthNames[displayedMonth] }</h3>
+                <div className="color-coding">
+                    <span style={{ backgroundColor: "green", display: "inline-block", width: "20px", height: "20px", marginRight: "5px" }}></span> Free to book
+                    <span style={{ backgroundColor: "gray", display: "inline-block", width: "20px", height: "20px", marginLeft: "10px", marginRight: "5px" }}></span> Unavailable
+                    <span style={{ backgroundColor: "red", display: "inline-block", width: "20px", height: "20px", marginLeft: "10px", marginRight: "5px" }}></span> Booked by someone else
+                    <span style={{ backgroundColor: "blue", display: "inline-block", width: "20px", height: "20px", marginLeft: "10px", marginRight: "5px" }}></span> Your current booking
+                </div>
                 </div>
                 <div className="col-auto">
                     <button

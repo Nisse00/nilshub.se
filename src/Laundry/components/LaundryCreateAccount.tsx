@@ -33,11 +33,11 @@ export default function LaundryCreateAccount() {
                 <form noValidate onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
-                        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}className="form-control" id="username"/>
+                        <input type="text" value={username} onChange={(e) => setUsername(e.target.value.trim())}className="form-control" id="username"/>
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}className="form-control" id="password"/>
+                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value.trim())}className="form-control" id="password"/>
                     </div>
                     <button type="submit" className="btn btn-primary w-100">Create account</button>
                 </form>
