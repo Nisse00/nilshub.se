@@ -82,6 +82,7 @@ export default function Calendar({ username }: CalendarProps) {
             cardTitleNumber={index + 1}
             bookings={bookings[index] as [boolean, boolean, boolean]}
             expired = {index < currentDate.getDate() - 1 && displayedMonth === currentDate.getMonth()}
+            displayedMonth={displayedMonth}
         />
     ));
 
