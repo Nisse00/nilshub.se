@@ -7,10 +7,10 @@ interface CalendarBoxProps {
     userAlreadyBooked: [boolean, string, number];
     forceRerenderCalendar: () => void;
     expired: boolean;
-    displayedMonth: number;
+    displayedYearMonth: [number, number];
 }
 
-export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired, displayedMonth}: CalendarBoxProps) {
+export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired, displayedYearMonth}: CalendarBoxProps) {
     const [isBooked1, setIsBooked1] = useState(bookings[0]);
     const [isBooked2, setIsBooked2] = useState(bookings[1]);
     const [isBooked3, setIsBooked3] = useState(bookings[2]);
@@ -21,8 +21,8 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
     const [username, setUsername] = useState("");
 
     const date = new Date();
-    const bookingDate = `${date.getFullYear()}-${date.getMonth() + 1}-${cardTitleNumber}`;
-    const bookingDateNbr = Number(`${date.getFullYear()}${date.getMonth() + 1}${cardTitleNumber}`);
+    const bookingDate = `${displayedYearMonth[0]}-${displayedYearMonth[1] + 1}-${cardTitleNumber}`;
+    const bookingDateNbr = Number(`${displayedYearMonth[0]}${displayedYearMonth[1] + 1}${cardTitleNumber}`);
     const currentDateNbr = Number(`${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`);
 
     useEffect(() => {
@@ -130,7 +130,7 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
     const checkIfUserHasBookedThisSlot = (idx: number): boolean => {
         if(userAlreadyBooked[0]) {
             if(Number(userAlreadyBooked[1].split("-")[2]) === cardTitleNumber) {
-                if(displayedMonth === Number(userAlreadyBooked[1].split("-")[1]) - 1) {
+                if(displayedYearMonth[1] === Number(userAlreadyBooked[1].split("-")[1]) - 1) {
                     if(userAlreadyBooked[2] == idx) {
                         return true;
                     }

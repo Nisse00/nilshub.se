@@ -9,6 +9,7 @@ interface CalendarProps {
 export default function Calendar({ username }: CalendarProps) {
     const currentDate = new Date();
     const [displayedMonth, setDisplayedMonth] = useState(currentDate.getMonth());
+    const [displayedYear, setDisplayedYear] = useState(currentDate.getFullYear());
     const daysInMonth = new Date(currentDate.getFullYear(), displayedMonth + 1, 0).getDate();
     const [bookings, setBookings] = useState(Array.from({ length: daysInMonth }, () => [false, false, false]));
     const [userAlreadyBooked, setUserAlreadyBooked] = useState(false);
@@ -79,7 +80,13 @@ export default function Calendar({ username }: CalendarProps) {
             displayedMonth === currentDate.getMonth()
                 ? (currentDate.getMonth() + 1) % 12
                 : currentDate.getMonth();
-    
+        
+        const newDisplayedYear =
+            displayedMonth === currentDate.getMonth()
+                ? currentDate.getFullYear()
+                : currentDate.getFullYear() + 1;
+
+        setDisplayedYear(newDisplayedYear);
         setDisplayedMonth(newDisplayedMonth);
     
         // Reset bookings to avoid undefined error before fetching new data
@@ -88,8 +95,6 @@ export default function Calendar({ username }: CalendarProps) {
         // Trigger re-fetching of bookings
         setReRender((prev) => prev + 1);
     };
-    
-    
 
     //This part create the actual calendarBoxes
     const calendarBoxes = Array.from({ length: daysInMonth }, (_, index) => (
@@ -100,7 +105,7 @@ export default function Calendar({ username }: CalendarProps) {
             cardTitleNumber={index + 1}
             bookings={bookings[index] && bookings[index].length === 3 ? [bookings[index][0], bookings[index][1], bookings[index][2]] : [false, false, false]}
             expired = {index < currentDate.getDate() - 1 && displayedMonth === currentDate.getMonth()}
-            displayedMonth={displayedMonth}
+            displayedYearMonth={[displayedYear, displayedMonth]}
         />
     ));
 
