@@ -104,10 +104,12 @@ def deleteBooking():
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
+    print("DELETING BOOKING FOR USER:", username, "DATE:", date, "TIME:", time)
     
     try:
         cursor.execute("DELETE FROM bookings WHERE username = ? AND booking_date = ? AND booking_time = ?", (username, date, time))
         conn.commit()
+        print("Booking deleted successfully")
         message = "Booking deleted successfully"
         status_code = 200
     except sqlite3.Error as e:

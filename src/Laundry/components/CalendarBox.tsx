@@ -21,7 +21,7 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
     const [username, setUsername] = useState("");
 
     const date = new Date();
-    const bookingDate = `${displayedYearMonth[0]}-${displayedYearMonth[1] + 1}-${cardTitleNumber}`;
+    const bookingDate = `${displayedYearMonth[0]}-${String(displayedYearMonth[1] + 1).padStart(2,'0')}-${String(cardTitleNumber).padStart(2,'0')}`;
     const bookingDateNbr = Number(`${displayedYearMonth[0]}${displayedYearMonth[1] + 1}${cardTitleNumber}`);
     const currentDateNbr = Number(`${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`);
 
@@ -74,6 +74,11 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
 
         if (userAlreadyBooked[0] && !bookingButton) {
             alert("You have already booked a time slot and cannot book another one.");
+            return;
+        }
+
+        if (bookingButton) {
+            alert("This time slot is already booked.");
             return;
         }
         

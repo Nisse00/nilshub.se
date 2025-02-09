@@ -55,7 +55,8 @@ export default function Calendar({ username }: CalendarProps) {
 
     // Fetch user's booking status
     const fetchUserBookingStatus = () => {
-        const currentDateFormatted = `${displayedYear}-${displayedMonth + 1}-${currentDate.getDate()}`;
+        const currentDateFormatted = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+
         fetch("http://localhost:5001/api/laundry/checkBookingForUser", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -76,16 +77,21 @@ export default function Calendar({ username }: CalendarProps) {
     };
 
     const handleSwitchMonth = () => {
-        const newDisplayedMonth =
-            displayedMonth === currentDate.getMonth()
-                ? (currentDate.getMonth() + 1) % 12
-                : currentDate.getMonth();
-        
-        const newDisplayedYear =
-            displayedMonth === currentDate.getMonth()
-                ? currentDate.getFullYear()
-                : currentDate.getFullYear() + 1;
+        let newDisplayedYear;
+        let newDisplayedMonth;
 
+        if (displayedMonth == currentDate.getMonth()) {
+            if (currentDate.getMonth() == 11) {
+                newDisplayedYear = currentDate.getFullYear() + 1;
+                newDisplayedMonth = 0;
+            } else {
+                newDisplayedYear = currentDate.getFullYear();
+                newDisplayedMonth = currentDate.getMonth() + 1;
+            }
+        } else {
+            newDisplayedYear = currentDate.getFullYear();
+            newDisplayedMonth = currentDate.getMonth();
+        }
         setDisplayedYear(newDisplayedYear);
         setDisplayedMonth(newDisplayedMonth);
     
