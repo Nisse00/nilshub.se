@@ -55,11 +55,11 @@ export default function Calendar({ username }: CalendarProps) {
 
     // Fetch user's booking status
     const fetchUserBookingStatus = () => {
-        const dateToSend = currentDate.toISOString().split("T")[0];
+        const currentDateFormatted = `${displayedYear}-${displayedMonth + 1}-${currentDate.getDate()}`;
         fetch("http://localhost:5001/api/laundry/checkBookingForUser", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, dateToSend}),
+            body: JSON.stringify({ username, currentDateFormatted}),
             credentials: "include",
         })
             .then((response) => response.json())

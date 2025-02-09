@@ -77,6 +77,7 @@ def addBooking():
     username = data.get('username', {}).get('name')
     date = data.get('date')
     time = data.get('time')
+    print("ADDING BOOKING FOR USER:", username, "DATE:", date, "TIME:", time)
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
@@ -132,13 +133,12 @@ def checkBookingForUser():
     data = request.get_json()
     print("THIS IS THE DATA: ", data)
     username = data.get('username')
-    date = data.get('dateToSend')
+    date = data.get('currentDateFormatted')
     print("CHECKING BOOKING FOR USER:", username, "DATE:", date)
 
     conn = sqlite3.connect("laundry_database.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM bookings WHERE username = ? AND booking_date >= ?", (username, date))
-    print("CHECK OF THE DATES:", "2024-12-30" >= "2024-12-30")
     booking = cursor.fetchall()
     conn.close()
     print("Booking for user:", booking)
