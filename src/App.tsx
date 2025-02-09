@@ -4,12 +4,16 @@ import CalendarPage from './Laundry/components/CalendarPage';
 import MainPageNilshub from './components/MainPageNilshub';
 import LaundryLogIn from './Laundry/components/LaundryLogIn.tsx';
 import LaundryCreateAccount from './Laundry/components/LaundryCreateAccount.tsx';
+import Cv from './CV/components/Cv.tsx';
 
 export default function App() {
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<MainPageNilshub />} />
+
+                <Route path="/Cv" element={<Cv />} />
+
                 <Route path="/Laundry" element={<MainPageLaundry />} />
                 <Route path="/Laundry/login" element={<LaundryLogIn />} />
                 <Route path="/Laundry/login/createAccount" element={<LaundryCreateAccount />} />

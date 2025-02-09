@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import nilshubpicture from '../pictures/nilshub.png';
 
@@ -13,9 +12,14 @@ export default function MainPageNilshub() {
             width: '100vw', 
             height: '100vh' 
         }}>
-            <button style={{ padding: '10px 20px', fontSize: '16px', marginTop: '20px' }} onClick={() => navigate("/Laundry")}>
-            Go to Laundry
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '20px' }}>
+                <button style={{ padding: '10px 40px', fontSize: '16px', marginBottom: '20px' }} onClick={() => navigate("/Laundry")}>
+                    Laundry Booking System
+                </button>
+                <button style={{ padding: '10px 40px', fontSize: '16px' }} onClick={() => navigate("/CV")}>
+                    My CV
+                </button>
+            </div>
         </div>
     )
 }
