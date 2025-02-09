@@ -9,7 +9,7 @@ interface CalendarProps {
 export default function Calendar({ username }: CalendarProps) {
     const currentDate = new Date();
     const [displayedMonth, setDisplayedMonth] = useState(currentDate.getMonth());
-    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    const daysInMonth = new Date(currentDate.getFullYear(), displayedMonth + 1, 0).getDate();
     const [bookings, setBookings] = useState(Array.from({ length: daysInMonth }, () => [false, false, false]));
     const [userAlreadyBooked, setUserAlreadyBooked] = useState(false);
     const [userBookingDate, setUserBookingDate] = useState("");
@@ -74,13 +74,31 @@ export default function Calendar({ username }: CalendarProps) {
         setReRender((prev) => prev + 1); // Increment reRender to trigger useEffect
     };
 
+    const handleSwitchMonth = () => {
+        const newDisplayedMonth =
+            displayedMonth === currentDate.getMonth()
+                ? (currentDate.getMonth() + 1) % 12
+                : currentDate.getMonth();
+    
+        setDisplayedMonth(newDisplayedMonth);
+    
+        // Reset bookings to avoid undefined error before fetching new data
+        setBookings(Array.from({ length: daysInMonth }, () => [false, false, false]));
+    
+        // Trigger re-fetching of bookings
+        setReRender((prev) => prev + 1);
+    };
+    
+    
+
+    //This part create the actual calendarBoxes
     const calendarBoxes = Array.from({ length: daysInMonth }, (_, index) => (
         <CalendarBox
             key={index}
             forceRerenderCalendar={forceRerenderCalendar}
             userAlreadyBooked={[userAlreadyBooked, userBookingDate, userBookingSlot]}
             cardTitleNumber={index + 1}
-            bookings={bookings[index] as [boolean, boolean, boolean]}
+            bookings={bookings[index] && bookings[index].length === 3 ? [bookings[index][0], bookings[index][1], bookings[index][2]] : [false, false, false]}
             expired = {index < currentDate.getDate() - 1 && displayedMonth === currentDate.getMonth()}
             displayedMonth={displayedMonth}
         />
@@ -129,7 +147,7 @@ export default function Calendar({ username }: CalendarProps) {
                 <div className="col-auto">
                     <button
                         className="btn btn-primary"
-                        onClick={() => setDisplayedMonth((prev) => (prev === currentDate.getMonth() ? prev + 1 : prev - 1))}
+                        onClick={() => handleSwitchMonth()}
                         style={{ marginLeft: "10px" }}
                     >
                         {displayedMonth === currentDate.getMonth() ? "Next Month" : "Back to current month"}
