@@ -78,7 +78,13 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
         }
 
         if (bookingButton) {
-            alert("This time slot is already booked.");
+            // Check if the current user is the one who made the booking
+            if (checkIfUserHasBookedThisSlot(arg)) {
+                // If it's the user's booking, allow them to cancel it
+                handleConfirmation(true, text, arg);
+            } else {
+                alert("This time slot is already booked by another user.");
+            }
             return;
         }
         
