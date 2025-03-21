@@ -10,7 +10,7 @@ interface CalendarBoxProps {
     displayedYearMonth: [number, number];
 }
 
-export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired, displayedYearMonth}: CalendarBoxProps) {
+export default function CalendarBox({cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired, displayedYearMonth}: CalendarBoxProps) {
     const [isBooked1, setIsBooked1] = useState(bookings[0]);
     const [isBooked2, setIsBooked2] = useState(bookings[1]);
     const [isBooked3, setIsBooked3] = useState(bookings[2]);
@@ -19,6 +19,7 @@ export default function CalendarBox({ cardTitleNumber, bookings, userAlreadyBook
     const [bookingText, setBookingText] = useState("");
     const [bookingSlot, setBookingSlot] = useState<number | null>(null);
     const [username, setUsername] = useState("");
+
 
     const date = new Date();
     const bookingDate = `${displayedYearMonth[0]}-${String(displayedYearMonth[1] + 1).padStart(2,'0')}-${String(cardTitleNumber).padStart(2,'0')}`;
