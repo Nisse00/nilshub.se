@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import BookingPopout from "./SavingBookingPopout";
 
 interface CalendarBoxProps {
-    cardTitleNumber: number;
-    bookings: [boolean, boolean, boolean];
-    userAlreadyBooked: [boolean, string, number];
-    forceRerenderCalendar: () => void;
-    expired: boolean;
-    displayedYearMonth: [number, number];
+    readonly cardTitleNumber: number;
+    readonly bookings: readonly [boolean, boolean, boolean];
+    readonly userAlreadyBooked: readonly [boolean, string, number];
+    readonly forceRerenderCalendar: () => void;
+    readonly expired: boolean;
+    readonly displayedYearMonth: readonly [number, number];
 }
 
 export default function CalendarBox({cardTitleNumber, bookings, userAlreadyBooked, forceRerenderCalendar, expired, displayedYearMonth}: CalendarBoxProps) {

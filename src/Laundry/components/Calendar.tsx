@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 interface CalendarProps {
-    username: string | null;
+   readonly username: string | null;
 }
 
 export default function Calendar({ username }: CalendarProps) {
