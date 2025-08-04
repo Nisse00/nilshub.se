@@ -101,8 +101,22 @@ export default function CalendarBox({cardTitleNumber, bookings, userAlreadyBooke
             body: JSON.stringify({ username, date: bookingDate, time, isBooked: !isBooked }),
             credentials: "include",
         })
-            .then(() => setIsBooked(!isBooked))
-            .catch((error) => console.error("Error:", error));
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((errorData) => {
+                        throw new Error(errorData.message || 'Booking failed');
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setIsBooked(!isBooked);
+                alert("Booking successful!");
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert(error.message || "Failed to book time slot. Please try again.");
+            });
     };
 
     const toggleCancelBooking = (isBooked: boolean, setIsBooked: (value: boolean) => void, time: number) => {
@@ -112,8 +126,22 @@ export default function CalendarBox({cardTitleNumber, bookings, userAlreadyBooke
             body: JSON.stringify({ username, date: bookingDate, time }),
             credentials: "include",
         })
-            .then(() => setIsBooked(!isBooked))
-            .catch((error) => console.error("Error:", error));
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((errorData) => {
+                        throw new Error(errorData.message || 'Cancellation failed');
+                    });
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setIsBooked(!isBooked);
+                alert("Booking cancelled successfully!");
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert(error.message || "Failed to cancel booking. Please try again.");
+            });
     }
 
     //This is called by the modal popout

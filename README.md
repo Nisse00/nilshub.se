@@ -48,3 +48,6 @@ export default tseslint.config({
   },
 })
 ```
+How to run the program:
+  1) Start by running the react code with the command: npm run dev 
+  2) Then start the server by running the python code in Laundry/db/server.py
