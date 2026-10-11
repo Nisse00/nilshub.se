@@ -7,7 +7,7 @@
     "dev": "vite",
     "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "vite",
-    "dev:backend": "cd backend && python3 server.py",
+    "dev:backend": "cd backend && FLASK_DEBUG=1 python3 server.py",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
