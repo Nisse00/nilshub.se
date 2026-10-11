@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Booking, cancelBooking, createBooking, errorMessage, getBookings } from "../api";
 import BookingPopout from "./BookingPopout";
-import { SLOT_STYLES, SlotStatus, TIME_SLOTS } from "../slots";
+import { MAX_ACTIVE_BOOKINGS, SLOT_STYLES, SlotStatus, TIME_SLOTS } from "../slots";
 import CalendarBox from "./CalendarBox";
 
 interface CalendarProps {
@@ -16,7 +15,7 @@ interface PendingAction {
 }
 
 interface Notice {
-  readonly kind: "success" | "danger";
+  readonly kind: "success" | "info" | "danger";
   readonly text: string;
 }
 
@@ -40,7 +39,6 @@ const toISODate = (year: number, month: number, day: number) =>
   `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
 export default function Calendar({ username }: CalendarProps) {
-  const navigate = useNavigate();
   const [showNextMonth, setShowNextMonth] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [pending, setPending] = useState<PendingAction | null>(null);
@@ -64,34 +62,49 @@ export default function Calendar({ username }: CalendarProps) {
     }
   }, []);
 
-  // `username` is a dependency because it decides which bookings are `mine`
+  // `username` is a dependency because it decides which bookings are `mine`.
+  // Messages meant for the previous user are cleared.
   useEffect(() => {
+    setNotice(null);
     refreshBookings();
   }, [refreshBookings, username]);
 
-  const hasOwnBooking = bookings.some((booking) => booking.mine);
+  const reachedBookingLimit =
+    bookings.filter((booking) => booking.mine).length >= MAX_ACTIVE_BOOKINGS;
+
+  const findBooking = (date: string, slot: number) =>
+    bookings.find((booking) => booking.date === date && booking.slot === slot);
 
   const slotStatus = (date: string, slot: number): SlotStatus => {
     if (date < today) return "expired";
-    const booking = bookings.find((b) => b.date === date && b.slot === slot);
+    const booking = findBooking(date, slot);
     if (!booking) return "free";
     return booking.mine ? "mine" : "taken";
   };
 
   const handleSlotClick = (date: string, slot: number) => {
     const fail = (text: string) => setNotice({ kind: "danger", text });
+    const when = `${date}, ${TIME_SLOTS[slot - 1]}`;
     setNotice(null);
 
-    if (!username) return fail("You must be logged in to book a time slot.");
+    if (!username) {
+      return fail("You must be logged in to book a time slot or see who has booked one.");
+    }
 
     switch (slotStatus(date, slot)) {
       case "mine":
         return setPending({ action: "cancel", date, slot });
       case "taken":
-        return fail("This time slot is already booked by another user.");
+        return setNotice({
+          kind: "info",
+          text: `${when} is booked by ${findBooking(date, slot)?.bookedBy ?? "another user"}.`,
+        });
       case "free":
-        if (hasOwnBooking)
-          return fail("You have already booked a time slot and cannot book another one.");
+        if (reachedBookingLimit) {
+          return fail(
+            `You already have ${MAX_ACTIVE_BOOKINGS} active bookings. Cancel one to book another.`,
+          );
+        }
         return setPending({ action: "book", date, slot });
     }
   };
@@ -129,12 +142,8 @@ export default function Calendar({ username }: CalendarProps) {
   return (
     <div className="container">
       <div className="row align-items-center pt-4">
-        <div className="col-auto">
-          <button type="button" className="btn btn-primary" onClick={() => navigate("/Laundry")}>
-            Back
-          </button>
-        </div>
-        <div className="col text-center">
+        <div className="col" />
+        <div className="col-auto text-center">
           <h1>Calendar Booking</h1>
           <h2 className="h3">
             {MONTH_NAMES[displayedMonth]} {displayedYear}
@@ -148,7 +157,7 @@ export default function Calendar({ username }: CalendarProps) {
             ))}
           </div>
         </div>
-        <div className="col-auto">
+        <div className="col text-end">
           <button
             type="button"
             className="btn btn-primary"

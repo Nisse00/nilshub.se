@@ -10,6 +10,8 @@ export interface Booking {
   slot: number;
   /** True when the booking belongs to the logged-in user */
   mine: boolean;
+  /** Username of whoever booked it; null unless you are logged in */
+  bookedBy: string | null;
 }
 
 async function request<T>(path: string, method = "GET", body?: unknown): Promise<T> {

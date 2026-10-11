@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { errorMessage, getUser, logout } from "../api";
 import Calendar from "../components/Calendar";
+import LaundryMenu from "../components/LaundryMenu";
 
 export default function CalendarPage() {
   const [username, setUsername] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     getUser()
@@ -26,31 +25,10 @@ export default function CalendarPage() {
 
   return (
     <div className="laundry-page">
-      <p className="laundry-user">
-        {username ? `User logged in: ${username}` : "No user logged in"}
-      </p>
-      {username ? (
-        <button type="button" className="laundry-button" onClick={handleLogOut}>
-          Log out
-        </button>
-      ) : (
-        <>
-          <button
-            type="button"
-            className="laundry-button"
-            onClick={() => navigate("/Laundry/login")}
-          >
-            Log in
-          </button>
-          <button
-            type="button"
-            className="laundry-button"
-            onClick={() => navigate("/Laundry/login/createAccount")}
-          >
-            Create account
-          </button>
-        </>
-      )}
+      <div className="laundry-topbar">
+        <LaundryMenu username={username} onLogOut={handleLogOut} />
+        <span>{username ? `Logged in as ${username}` : "Not logged in"}</span>
+      </div>
       {error && (
         <div className="alert alert-danger container mt-3" role="alert">
           {error}

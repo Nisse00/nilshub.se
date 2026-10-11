@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 import pytest
 
-from server import create_app, last_bookable_day
+from server import MAX_ACTIVE_BOOKINGS, create_app, last_bookable_day
 
 API = "/api/laundry"
 PASSWORD = "correct horse"
@@ -108,19 +108,39 @@ class TestBookings:
     def test_book_and_list(self, app):
         anna, bert = register(app, "anna"), register(app, "bert")
         assert book(anna, day(1), 2).status_code == 201
-        booking = {"date": day(1), "slot": 2}
+        booking = {"date": day(1), "slot": 2, "bookedBy": "anna"}
         assert anna.get(f"{API}/bookings").get_json() == {"bookings": [{**booking, "mine": True}]}
         assert bert.get(f"{API}/bookings").get_json() == {"bookings": [{**booking, "mine": False}]}
+
+    def test_names_are_hidden_when_logged_out(self, app, client):
+        book(register(app, "anna"), day(1), 2)
+        assert client.get(f"{API}/bookings").get_json() == {
+            "bookings": [{"date": day(1), "slot": 2, "mine": False, "bookedBy": None}]
+        }
 
     def test_slot_can_only_be_booked_once(self, app):
         anna, bert = register(app, "anna"), register(app, "bert")
         assert book(anna, day(1), 1).status_code == 201
         assert book(bert, day(1), 1).status_code == 409
 
-    def test_one_upcoming_booking_per_user(self, app):
+    def test_limited_number_of_active_bookings(self, app):
         anna = register(app, "anna")
+        for offset in range(1, MAX_ACTIVE_BOOKINGS + 1):
+            assert book(anna, day(offset), 1).status_code == 201
+        assert book(anna, day(MAX_ACTIVE_BOOKINGS + 1), 1).status_code == 409
+        assert anna.delete(f"{API}/bookings/{day(1)}/1").status_code == 200
+        assert book(anna, day(MAX_ACTIVE_BOOKINGS + 1), 1).status_code == 201
+
+    def test_past_bookings_do_not_count_towards_the_limit(self, app):
+        anna = register(app, "anna")
+        with sqlite3.connect(app.config["DATABASE"]) as conn:
+            for slot in (1, 2, 3):
+                conn.execute(
+                    "INSERT INTO bookings (username, booking_date, booking_time)"
+                    " VALUES ('anna', ?, ?)",
+                    (day(-1), slot),
+                )
         assert book(anna, day(1), 1).status_code == 201
-        assert book(anna, day(2), 1).status_code == 409
 
     def test_cancel_then_book_again(self, app):
         anna = register(app, "anna")

@@ -18,6 +18,7 @@ SECRET_KEY_FILE = BASE_DIR / ".secret_key"
 # Time slots 1-3 are 08:00-12:00, 12:00-16:00 and 16:00-20:00
 SLOTS = (1, 2, 3)
 MIN_PASSWORD_LENGTH = 8
+MAX_ACTIVE_BOOKINGS = 3
 HASH_PREFIXES = ("scrypt:", "pbkdf2:")
 
 SCHEMA = """
@@ -206,7 +207,10 @@ def current_user():
 
 @api.get("/bookings")
 def list_bookings():
-    """All bookings from today onwards. `mine` marks the caller's own."""
+    """All bookings from today onwards. `mine` marks the caller's own.
+
+    Who booked a slot is only revealed to logged-in users.
+    """
     rows = (
         get_db()
         .execute(
@@ -224,6 +228,7 @@ def list_bookings():
                     "date": row["booking_date"],
                     "slot": int(row["booking_time"]),
                     "mine": row["username"] == username,
+                    "bookedBy": row["username"] if username else None,
                 }
                 for row in rows
             ]
@@ -242,19 +247,19 @@ def create_booking():
 
     username = session["username"]
     db = get_db()
-    # IMMEDIATE takes the write lock up front, so the "one booking per user"
-    # check and the insert cannot interleave with another request.
+    # IMMEDIATE takes the write lock up front, so the booking limit check and
+    # the insert cannot interleave with another request.
     db.execute("BEGIN IMMEDIATE")
     try:
-        existing = db.execute(
-            "SELECT booking_date FROM bookings WHERE username = ? AND booking_date >= ?",
+        (active,) = db.execute(
+            "SELECT COUNT(*) FROM bookings WHERE username = ? AND booking_date >= ?",
             (username, date.today().isoformat()),
         ).fetchone()
-        if existing:
+        if active >= MAX_ACTIVE_BOOKINGS:
             db.execute("ROLLBACK")
             return error(
-                f"You already have a booking on {existing['booking_date']}."
-                " Cancel it before booking another time slot.",
+                f"You already have {MAX_ACTIVE_BOOKINGS} active bookings."
+                " Cancel one before booking another time slot.",
                 409,
             )
         db.execute(
@@ -269,7 +274,7 @@ def create_booking():
         db.execute("ROLLBACK")
         raise
 
-    return jsonify({"date": booking_date, "slot": slot, "mine": True}), 201
+    return jsonify({"date": booking_date, "slot": slot, "mine": True, "bookedBy": username}), 201
 
 
 @api.delete("/bookings/<booking_date>/<int:slot>")

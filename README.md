@@ -42,6 +42,8 @@ npm run dev:full
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5001 (Vite proxies `/api` to it, so the browser only talks to port 5173)
 
+Both servers reload automatically when you save a file.
+
 Other scripts:
 
 - `npm run dev` / `npm run dev:frontend` – only the frontend
@@ -59,7 +61,7 @@ and `npm run lint:backend` before committing.
 
 - Each day has three time slots: 08:00-12:00, 12:00-16:00 and 16:00-20:00.
 - You can book in the current month and the next one, never in the past.
-- Each user can hold one upcoming booking at a time; cancel it to book another.
+- Each user can hold three upcoming bookings at a time; cancel one to book another.
 - A slot can only be booked by one user. This is enforced by a unique index in
   the database, so two simultaneous requests can never both succeed.
 
@@ -74,7 +76,7 @@ Environment variables, all optional:
 | `SECRET_KEY`            | random, stored in `backend/.secret_key` | Signs the session cookie                     |
 | `LAUNDRY_DATABASE`      | `backend/laundry.db`                    | Path to the SQLite database                  |
 | `SESSION_COOKIE_SECURE` | off                                     | Set to `1` in production (HTTPS only cookie) |
-| `FLASK_DEBUG`           | off                                     | Set to `1` for auto-reload while developing  |
+| `FLASK_DEBUG`           | off                                     | Auto-reload; the `dev` scripts turn it on    |
 
 The database is created on first start and is not checked in to git.
 
