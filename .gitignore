@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python backend
+__pycache__/
+.venv/
+*.db
+*.sqlite3
+instance/
+backend/.secret_key
+*.tsbuildinfo
