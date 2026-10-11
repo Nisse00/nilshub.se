@@ -1,24 +1,29 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPageLaundry from './Laundry/components/MainPageLaundry';
-import CalendarPage from './Laundry/components/CalendarPage';
-import MainPageNilshub from './components/MainPageNilshub';
-import LaundryLogIn from './Laundry/components/LaundryLogIn.tsx';
-import LaundryCreateAccount from './Laundry/components/LaundryCreateAccount.tsx';
-import Cv from './CV/components/Cv.tsx';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AuthPage from "./laundry/pages/AuthPage";
+import CalendarPage from "./laundry/pages/CalendarPage";
+import LaundryHomePage from "./laundry/pages/LaundryHomePage";
+import CvPage from "./pages/CvPage";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<MainPageNilshub />} />
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
 
-                <Route path="/Cv" element={<Cv />} />
+        <Route path="/Cv" element={<CvPage />} />
 
-                <Route path="/Laundry" element={<MainPageLaundry />} />
-                <Route path="/Laundry/login" element={<LaundryLogIn />} />
-                <Route path="/Laundry/login/createAccount" element={<LaundryCreateAccount />} />
-                <Route path="/Laundry/calendar" element={<CalendarPage />} />
-            </Routes>
-        </Router>
-    );
+        <Route path="/Laundry" element={<LaundryHomePage />} />
+        <Route path="/Laundry/login" element={<AuthPage key="login" mode="login" />} />
+        <Route
+          path="/Laundry/login/createAccount"
+          element={<AuthPage key="register" mode="register" />}
+        />
+        <Route path="/Laundry/calendar" element={<CalendarPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
+  );
 }
