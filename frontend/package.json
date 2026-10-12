@@ -7,14 +7,14 @@
     "dev": "vite",
     "dev:full": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "vite",
-    "dev:backend": "cd backend && FLASK_DEBUG=1 python3 server.py",
+    "dev:backend": "cd ../backend && FLASK_DEBUG=1 .venv/bin/python server.py",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:backend": "cd backend && python3 -m pytest",
-    "lint:backend": "cd backend && python3 -m ruff check . && python3 -m ruff format --check ."
+    "test:backend": "cd ../backend && .venv/bin/python -m pytest",
+    "lint:backend": "cd ../backend && .venv/bin/python -m ruff check . && .venv/bin/python -m ruff format --check ."
   },
   "dependencies": {
     "bootstrap": "^5.3.3",

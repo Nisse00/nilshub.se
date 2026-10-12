@@ -2,53 +2,61 @@
 
 My personal website. It also hosts the laundry booking system for my building.
 
-- **Frontend** – React + TypeScript + Vite, in `src/`
+- **Frontend** – React + TypeScript + Vite, in `frontend/`
 - **Backend** – a small Flask API with a SQLite database, in `backend/`
 
 ```
-src/
-  main.tsx, App.tsx    entry point and routes
-  index.css            all styles
-  assets/              images imported by the code
-  pages/               the site's own pages: / (home), /Cv, not found
-  laundry/             the laundry booking system (/Laundry)
-    api.ts             client for the backend
-    slots.ts           time slots and their colours
-    pages/             one file per route
-    components/        pieces used by the pages
+frontend/
+  package.json         scripts and dependencies
+  index.html           the single HTML page
+  public/              files served as-is (CV.pdf)
+  src/
+    main.tsx, App.tsx  entry point and routes
+    index.css          all styles
+    assets/            images imported by the code
+    pages/             the site's own pages: / (home), /Cv, not found
+    laundry/           the laundry booking system (/Laundry)
+      api.ts           client for the backend
+      slots.ts         time slots and their colours
+      pages/           one file per route
+      components/      pieces used by the pages
 backend/
   server.py            the API
   tests/               pytest tests
-public/                files served as-is (CV.pdf)
 ```
+
+The config files in `frontend/` (`vite.config.ts`, `tsconfig*.json`,
+`eslint.config.js`, `.prettierrc.json`) have to stay next to `package.json`:
+the tools look for them there.
 
 ## Getting started
 
-Install the dependencies once:
+Install the dependencies once, from the project root:
 
 ```bash
-npm install
+npm install --prefix frontend
 python3 -m venv backend/.venv
-source backend/.venv/bin/activate
-pip install -r backend/requirements-dev.txt
+backend/.venv/bin/pip install -r backend/requirements-dev.txt
 ```
 
-Then start both servers (with the virtual environment activated):
+All commands are then run from the `frontend/` folder. Start both servers with:
 
 ```bash
+cd frontend
 npm run dev:full
 ```
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5001 (Vite proxies `/api` to it, so the browser only talks to port 5173)
 
-Both servers reload automatically when you save a file.
+Both servers reload automatically when you save a file. The backend scripts use
+`backend/.venv` directly, so the virtual environment does not need to be activated.
 
 Other scripts:
 
 - `npm run dev` / `npm run dev:frontend` – only the frontend
 - `npm run dev:backend` – only the backend
-- `npm run build` – type-check and build the frontend into `dist/`
+- `npm run build` – type-check and build the frontend into `frontend/dist/`
 - `npm run lint` – run ESLint on the frontend
 - `npm run format` – format the frontend with Prettier (`format:check` only checks)
 - `npm run test:backend` – run the backend tests (pytest)
@@ -80,6 +88,6 @@ Environment variables, all optional:
 
 The database is created on first start and is not checked in to git.
 
-In production, serve `dist/` and forward `/api` to the Flask app from the same
+In production, serve `frontend/dist/` and forward `/api` to the Flask app from the same
 domain (run it with a WSGI server, e.g. `gunicorn "server:create_app()"`, not
 `python3 server.py`). Only `backend/requirements.txt` is needed there.
