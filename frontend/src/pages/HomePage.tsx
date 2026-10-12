@@ -7,9 +7,6 @@ export default function HomePage() {
   return (
     <div className="home" style={{ backgroundImage: `url(${nilshubPicture})` }}>
       <nav className="home-nav">
-        <button type="button" onClick={() => navigate("/Laundry")}>
-          Laundry Booking System
-        </button>
         <button type="button" onClick={() => navigate("/Cv")}>
           My CV
         </button>
