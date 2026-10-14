@@ -8,7 +8,8 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/Cv" element={<CvPage />} />
+        {/* Routes are case-insensitive, so the old /Cv links keep working */}
+        <Route path="/cv" element={<CvPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
