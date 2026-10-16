@@ -4,9 +4,10 @@ export const PROFILE = {
   name: "Nils Ekstrand",
   title: "Software developer from Lund",
   intro:
-    "I study Computer Science at LTH in Lund and have worked with test automation, " +
-    "tooling and backend development at Ericsson, Axis Communications and Softhouse. " +
-    "In my spare time I build small projects, a few of which are below.",
+    "I'm a full-stack developer at Netcompany, working in a Scrum team on a project for the " +
+    "Danish Government. I studied Computer Science at LTH and wrote my master's thesis at " +
+    "Sinch on messaging systems such as Kafka and RabbitMQ. Outside work I'm training for an " +
+    "Ironman and building small projects, a few of which are below.",
 };
 
 export const LINKS = [

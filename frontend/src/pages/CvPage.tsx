@@ -1,5 +1,5 @@
 import Layout from "../components/Layout";
-import { CV_PROFILE, CvEntry, EDUCATION, LANGUAGES, WORK } from "../data/cv";
+import { CV_PROFILE, CvEntry, EDUCATION, SKILLS, WORK } from "../data/cv";
 import { PROFILE } from "../data/profile";
 
 // Served from the public folder
@@ -16,6 +16,13 @@ function Timeline({ entries }: { readonly entries: CvEntry[] }) {
               {entry.title} <span className="timeline-place">· {entry.place}</span>
             </h3>
             {entry.description && <p>{entry.description}</p>}
+            {entry.tech && (
+              <ul className="tags timeline-tags">
+                {entry.tech.map((tech) => (
+                  <li key={tech}>{tech}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </li>
       ))}
@@ -45,6 +52,18 @@ export default function CvPage() {
         </section>
 
         <section>
+          <h2>Technical skills</h2>
+          <dl className="skills">
+            {SKILLS.map(({ area, items }) => (
+              <div key={area}>
+                <dt>{area}</dt>
+                <dd>{items}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section>
           <h2>Work experience</h2>
           <Timeline entries={WORK} />
         </section>
@@ -52,18 +71,6 @@ export default function CvPage() {
         <section>
           <h2>Education</h2>
           <Timeline entries={EDUCATION} />
-        </section>
-
-        <section>
-          <h2>Languages</h2>
-          <dl className="languages">
-            {LANGUAGES.map(({ language, level }) => (
-              <div key={language}>
-                <dt>{language}</dt>
-                <dd>{level}</dd>
-              </div>
-            ))}
-          </dl>
         </section>
       </article>
     </Layout>
