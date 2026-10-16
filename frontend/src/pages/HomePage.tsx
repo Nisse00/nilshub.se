@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
 import nilshubPicture from "../assets/nilshub.png";
+import { POSTS, formatDate } from "../blog/posts";
 import Layout from "../components/Layout";
+import Reveal from "../components/Reveal";
 import { LINKS, PROFILE } from "../data/profile";
 import { PROJECTS } from "../data/projects";
 
@@ -22,11 +25,11 @@ export default function HomePage() {
         <img className="hero-image" src={nilshubPicture} alt="The nilshub.se logo" />
       </section>
 
-      <section className="projects" aria-labelledby="projects-heading">
-        <h2 id="projects-heading">Projects</h2>
+      <Reveal as="section" className="projects">
+        <h2>Projects</h2>
         <div className="project-grid">
-          {PROJECTS.map((project) => (
-            <article key={project.name} className="project-card">
+          {PROJECTS.map((project, index) => (
+            <Reveal as="article" key={project.name} className="project-card" delay={index * 80}>
               <h3>{project.name}</h3>
               <p>{project.description}</p>
               <ul className="tags">
@@ -39,10 +42,28 @@ export default function HomePage() {
                   View the code →
                 </a>
               )}
-            </article>
+            </Reveal>
           ))}
         </div>
-      </section>
+      </Reveal>
+
+      <Reveal as="section" className="latest-posts">
+        <div className="section-heading">
+          <h2>Latest posts</h2>
+          <Link to="/blog">All posts →</Link>
+        </div>
+        <ol className="post-list">
+          {POSTS.slice(0, 2).map((post) => (
+            <li key={post.slug}>
+              <Link to={`/blog/${post.slug}`} className="post-card">
+                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                <h3>{post.title}</h3>
+                <p>{post.summary}</p>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
     </Layout>
   );
 }

@@ -10,10 +10,11 @@ frontend/
   src/
     main.tsx, App.tsx  entry point and routes
     index.css          all styles (colours are variables at the top)
-    data/              the content: profile and links, projects, CV
+    data/              the content: profile and links, projects, CV, now page
+    blog/posts/        blog posts, one Markdown file each
     assets/            images imported by the code
     components/        Layout (header and footer shared by all pages)
-    pages/             one file per page: / (home), /cv, not found
+    pages/             one file per page: /, /now, /blog, /blog/:post, /cv, not found
 .github/workflows/     CI: lint, format check and build on every push
 ```
 
@@ -42,5 +43,19 @@ Other scripts:
 
 To change what the site says, edit the files in `src/data/`. When the CV changes,
 update both `src/data/cv.ts` and `public/CV.pdf`.
+
+To write a blog post, add a Markdown file to `src/blog/posts/`. The file name becomes
+its address (`my-post.md` → `/blog/my-post`), and it must start with:
+
+```
+---
+title: The title of the post
+date: 2026-10-16
+summary: One or two sentences shown in the list of posts.
+---
+```
+
+Remember to update `src/data/now.ts` now and then; the now page shows when it was
+last updated.
 
 To publish the site, build it and serve the contents of `frontend/dist/`.

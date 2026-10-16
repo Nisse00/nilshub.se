@@ -204,6 +204,21 @@ img {
   background-color: var(--surface);
 }
 
+.project-card,
+.post-card {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.project-card:hover,
+.post-card:hover {
+  border-color: var(--accent-strong);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 35%);
+  transform: translateY(-4px);
+}
+
 .project-card p {
   flex: 1;
   color: var(--text-muted);
@@ -331,6 +346,183 @@ img {
     grid-template-columns: 1fr;
     gap: 0;
   }
+}
+
+/* Fade-in on scroll (components/Reveal.tsx). An animation rather than a transition,
+   so the delay used for staggering doesn't also delay the hover effects. */
+.reveal {
+  opacity: 0;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  animation: fade-up 0.6s ease var(--reveal-delay, 0ms) backwards;
+}
+
+/* Hero fades in on load */
+.hero {
+  animation: fade-up 0.7s ease backwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+/* Respect visitors who have asked their system for less motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+  }
+}
+
+/* Shared by the blog and now pages */
+.narrow {
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.narrow > h1 {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+}
+
+.page-intro {
+  margin-bottom: 2.5rem;
+  color: var(--text-muted);
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.section-heading a {
+  text-decoration: none;
+}
+
+.latest-posts {
+  margin-top: 4rem;
+}
+
+/* Blog */
+.post-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-card {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  background-color: var(--surface);
+}
+
+.post-card time,
+.post-header time {
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.post-card h2,
+.post-card h3 {
+  margin: 0.35rem 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.post-card p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 2rem;
+  text-decoration: none;
+}
+
+.post-header {
+  margin-bottom: 2rem;
+}
+
+.post-header h1 {
+  margin-top: 0.35rem;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+}
+
+.prose {
+  font-size: 1.05rem;
+}
+
+.prose h2 {
+  margin-top: 2.5rem;
+  font-size: 1.4rem;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+.prose code {
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  font-size: 0.9em;
+  background-color: var(--surface);
+}
+
+.prose pre {
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+
+/* Now page */
+.now-list {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.now-item {
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--accent-strong);
+}
+
+.now-item h2 {
+  margin-bottom: 0.35rem;
+  font-size: 1.1rem;
+}
+
+.now-item p {
+  margin: 0;
+  color: var(--text-muted);
 }
 
 /* Page not found */

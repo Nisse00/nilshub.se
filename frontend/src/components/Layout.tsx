@@ -13,6 +13,8 @@ export default function Layout({ children }: { readonly children: ReactNode }) {
           <NavLink to="/" end>
             Home
           </NavLink>
+          <NavLink to="/now">Now</NavLink>
+          <NavLink to="/blog">Blog</NavLink>
           <NavLink to="/cv">CV</NavLink>
         </nav>
       </header>
